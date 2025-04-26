@@ -2,6 +2,7 @@ package com.vivek.jetpackcompose.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,11 +31,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.vivek.jetpackcompose.models.Quote
 
 
 @Preview
 @Composable
-fun QuoteListItem (){
+fun QuoteListItem (quote: Quote,onClick:()->Unit){
     Box (
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize(1f)
@@ -52,7 +54,7 @@ fun QuoteListItem (){
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 4.dp
             ),
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(8.dp).clickable { onClick() }
         ) {
             Row(
                 Modifier.padding(16.dp)
@@ -71,7 +73,7 @@ fun QuoteListItem (){
                 Column(modifier = Modifier.weight(1f)) {
                     //weight to column to give space
                     Text(
-                        text = "The subtle art of not giving a F***",
+                        text = quote.quote,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 5.dp)
                     )
@@ -82,7 +84,7 @@ fun QuoteListItem (){
                             .height(1.dp)
                     )
                     Text(
-                        text = "Author",
+                        text = quote.author,
                         fontFamily = FontFamily.Cursive,
                         style = MaterialTheme.typography.bodySmall
                     )
