@@ -40,9 +40,60 @@ class MainActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                snackBarDemp()
+            }
         }
     }
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun snackBarDemp(){
+        val scaffoldState : BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+        val coroutineScope = rememberCoroutineScope()
+
+        Scaffold(){
+            Button(onClick = {
+                coroutineScope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar("Hello")
+                }
+            }) { }
+        }
+
+    }
+
+    @Preview
+    @Composable
+    fun buttonDemo(){
+        Button(onClick = {
+            println("Button Clicked")
+        }, colors = ButtonDefaults.textButtonColors(
+            containerColor = Color.Red
+        ))
+        {
+            Text(text = "Click Me",color = Color.White,modifier = Modifier.border(width = 1.dp,color = Color.Black))
+        }
+
+        TextButton(onClick = {
+            println("Text Button Clicked")
+        }, enabled = false)
+        {
+            Text(text = "TV Click Me2", style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(5.dp))
+        }
+
+        OutlinedButton (onClick = {
+            println("Button Clicked")
+        }, enabled = false, shape = CutCornerShape(5.dp))
+        {
+            Text(text = "Click Me2",color = Color.Blue)
+        }
+    }
+
 }
 
 
