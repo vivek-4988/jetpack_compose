@@ -1,96 +1,94 @@
 package com.vivek.jetpackcompose
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.vivek.jetpackcompose.ui.theme.JetpackComposeTheme
-import kotlinx.coroutines.launch
+import com.vivek.jetpackcompose.list.ListOfQuotes
+import com.vivek.jetpackcompose.models.Quote
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                snackBarDemp()
+            displayQuotes {  }
+
+        }
+    }
+
+    @Composable
+    fun scrollableColumn() {
+        val scrollState = rememberScrollState()
+        Column(modifier = Modifier.verticalScroll(scrollState)) {
+            for (i in 1..100) {
+                Text(
+                    text = "Item $i",
+                    modifier = Modifier.padding(10.dp),
+                    style = MaterialTheme.typography.labelSmall
+                )
+                Divider(color = MaterialTheme.colorScheme.primary, thickness = 1.dp)
             }
         }
     }
 
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun snackBarDemp(){
-        val scaffoldState : BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
-        val coroutineScope = rememberCoroutineScope()
-
-        Scaffold(){
-            Button(onClick = {
-                coroutineScope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar("Hello")
-                }
-            }) { }
+    fun lazyColumDemo2(selectableItem : (String) -> Unit) {
+        LazyColumn {
+            items(100) {
+                Text(
+                    text = "Item $it",
+                    modifier = Modifier.padding(10.dp).clickable {
+                        selectableItem("$it")
+                    },
+                    style = MaterialTheme.typography.labelSmall
+                )
+                Divider(color = MaterialTheme.colorScheme.primary, thickness = 1.dp)
+            }
         }
-
     }
 
-    @Preview
     @Composable
-    fun buttonDemo(){
-        Button(onClick = {
-            println("Button Clicked")
-        }, colors = ButtonDefaults.textButtonColors(
-            containerColor = Color.Red
-        ))
-        {
-            Text(text = "Click Me",color = Color.White,modifier = Modifier.border(width = 1.dp,color = Color.Black))
+    fun displayQuotes(selectableItem: (Quote) -> Unit) {
+        val quotes = remember { ListOfQuotes.quotes }
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
+            modifier = Modifier.padding(8.dp)
+        ) {
+            items(quotes.size) {
+                quoteListItem(quotes[it],selectableItem)
+            }
         }
+    }
 
-        TextButton(onClick = {
-            println("Text Button Clicked")
-        }, enabled = false)
-        {
-            Text(text = "TV Click Me2", style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(5.dp))
-        }
-
-        OutlinedButton (onClick = {
-            println("Button Clicked")
-        }, enabled = false, shape = CutCornerShape(5.dp))
-        {
-            Text(text = "Click Me2",color = Color.Blue)
+    @Composable
+    fun quoteListItem(quote: Quote,selectableItem: (Quote) -> Unit){
+        Card(
+            modifier = Modifier.padding(8.dp, 4.dp).fillMaxWidth(),
+            shape = RoundedCornerShape(corner = CornerSize(18))
+        ) {
+            Column(modifier = Modifier.padding(16.dp).clickable {
+                selectableItem(quote)
+            }) {
+                Text(text = quote.quote, style = MaterialTheme.typography.labelMedium)
+                Text(text = quote.author, style = MaterialTheme.typography.labelSmall)
+            }
         }
     }
 

@@ -1,3 +1,5 @@
 package com.vivek.jetpackcompose.models
 
-data class Quote(val quote:String,val author:String)
+import java.io.Serializable
+
+data class Quote(val id:Int,val quote:String,val author:String) : Serializable
