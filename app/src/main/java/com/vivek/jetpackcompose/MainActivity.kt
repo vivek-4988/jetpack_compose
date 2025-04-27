@@ -5,15 +5,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vivek.jetpackcompose.ui.theme.JetpackComposeTheme
@@ -22,35 +32,43 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JetpackComposeTheme {
-                Surface(color = MaterialTheme.colorScheme.primary) {
-                    Greeting("Android")
-                }
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                buttonDemo()
             }
         }
     }
 
+    @Preview
     @Composable
-    private fun Greeting(name: String) {
-        Text(
-            text = "Hello $name",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = androidx.compose.ui.Modifier
-                .background(color = Color.Green)
-                .padding(12.dp)
-                .fillMaxWidth(0.5f)
-                .fillMaxHeight(0.3f)
-        )
-    }
+    fun buttonDemo(){
+        Button(onClick = {
+            println("Button Clicked")
+        }, colors = ButtonDefaults.textButtonColors(
+            containerColor = Color.Red
+        ))
+        {
+            Text(text = "Click Me",color = Color.White,modifier = Modifier.border(width = 1.dp,color = Color.Black))
+        }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        JetpackComposeTheme {
-            Greeting("Android  sdf  sdf2 df")
+        TextButton(onClick = {
+            println("Text Button Clicked")
+        }, enabled = false)
+        {
+            Text(text = "TV Click Me2", style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(5.dp))
+        }
+
+        OutlinedButton (onClick = {
+            println("Button Clicked")
+        }, enabled = false, shape = CutCornerShape(5.dp))
+        {
+            Text(text = "Click Me2",color = Color.Blue)
         }
     }
+
 }
 
 
